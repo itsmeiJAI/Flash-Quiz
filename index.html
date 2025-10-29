@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>สุ่มคำถาม HEARTIST</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --red-50: #fef2f2;
+        --red-100: #fee2e2;
+        --red-200: #fecaca;
+        --red-300: #fca5a5;
+        --red-400: #f87171;
+        --red-500: #ef4444;
+        --red-600: #dc2626;
+      }
+      html, body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: 'Prompt', 'Kanit', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background: radial-gradient(1200px 800px at 10% 10%, var(--red-50), white) no-repeat,
+                    radial-gradient(1000px 700px at 90% 20%, white, var(--red-100)) no-repeat;
+        background-color: var(--red-50);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        overflow: hidden;
+      }
+      .container {
+        position: relative;
+        max-width: 768px;
+        width: 100%;
+        z-index: 1;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 32px;
+        animation: fade-in 0.6s ease-out both;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 60px;
+        font-weight: 700;
+        color: var(--red-600);
+        text-shadow: 0 2px 6px rgba(220,38,38,0.2);
+        font-family: 'Kanit', sans-serif;
+      }
+      .subtitle {
+        color: #fb7185;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .tagline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: var(--red-500);
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 8px;
+      }
+      .card-wrap {
+        perspective: 1000px;
+        transform-style: preserve-3d;
+      }
+      .card {
+        position: relative;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        padding: 32px;
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid var(--red-200);
+        transition: transform 0.6s ease, opacity 0.6s ease;
+        cursor: pointer;
+        overflow: hidden;
+      }
+      .card:hover { transform: scale(1.03); }
+      .card.is-flipping { transform: scale(0.95) rotateY(180deg); opacity: 0; }
+      .card-glow {
+        position: absolute; inset: 0; border-radius: 24px;
+        background: linear-gradient(90deg, var(--red-400), var(--red-600));
+        filter: blur(24px);
+        opacity: 0.2;
+      }
+      .content { position: relative; z-index: 1; text-align: center; width: 100%; }
+      .question { font-size: 28px; font-weight: 700; color: #1f2937; line-height: 1.6; padding: 0 12px; }
+      .hint { color: #fb7185; margin-top: 16px; font-size: 14px; font-weight: 600; }
+      .big-gradient-text {
+        font-size: 36px; font-weight: 700; background: linear-gradient(90deg, var(--red-500), var(--red-600));
+        -webkit-background-clip: text; background-clip: text; color: transparent; font-family: 'Kanit', sans-serif;
+      }
+      .corner { position: absolute; width: 48px; height: 48px; border-radius: 16px; }
+      .tl { top: 16px; left: 16px; border-top: 4px solid #fb7185; border-left: 4px solid #fb7185; }
+      .tr { top: 16px; right: 16px; border-top: 4px solid var(--red-500); border-right: 4px solid var(--red-500); }
+      .bl { bottom: 16px; left: 16px; border-bottom: 4px solid var(--red-500); border-left: 4px solid var(--red-500); }
+      .br { bottom: 16px; right: 16px; border-bottom: 4px solid #fb7185; border-right: 4px solid #fb7185; }
+      .float, .float-slow { position: absolute; pointer-events: none; opacity: 0.3; }
+      @keyframes fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes floatK {
+        0% { transform: translateY(-20px) translateX(0) rotate(0deg); opacity: 0; }
+        10% { opacity: 0.3; }
+        90% { opacity: 0.3; }
+        100% { transform: translateY(100vh) translateX(50px) rotate(360deg); opacity: 0; }
+      }
+      @keyframes floatSlowK {
+        0% { transform: translateY(-40px) scale(1) rotate(0deg); opacity: 0; }
+        10% { opacity: 0.2; }
+        50% { transform: translateY(50vh) scale(1.2) rotate(180deg); }
+        90% { opacity: 0.2; }
+        100% { transform: translateY(100vh) scale(1) rotate(360deg); opacity: 0; }
+      }
+      .animate-float { animation: floatK linear infinite; }
+      .animate-float-slow { animation: floatSlowK linear infinite; opacity: 0.2; }
+      .icon-heart, .icon-drop { width: 24px; height: 24px; display: inline-block; }
+      .icon-heart svg { width: 100%; height: 100%; fill: currentColor; color: var(--red-500); }
+      .icon-drop svg { width: 100%; height: 100%; fill: currentColor; color: var(--red-500); }
+      .pulse { animation: pulse 1.6s infinite ease-in-out; }
+      @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.12); opacity: 0.85; } }
+    </style>
+  </head>
+  <body>
+    <div id="bg-drops"></div>
+    <div id="bg-hearts"></div>
+
+    <div class="container">
+      <div class="header">
+        <div class="row">
+          <span class="icon-drop pulse" aria-hidden="true"> 
+            <svg viewBox="0 0 24 24"><path d="M12 2c3 4.5 8 8.24 8 12a8 8 0 1 1-16 0c0-3.76 5-7.5 8-12z"></path></svg>
+          </span>
+          <h1>Flash Quiz</h1>
+          <span class="icon-heart pulse" aria-hidden="true" style="animation-delay:.5s">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-6.716-4.243-9.172-7.314C1.02 12.605 1 10.13 2.343 8.586c1.343-1.543 3.657-1.757 5.172-.471L12 10l4.485-1.885c1.515-1.286 3.829-1.072 5.172.471C23 10.13 22.98 12.605 21.172 13.686 18.716 16.757 12 21 12 21z"></path></svg>
+          </span>
+        </div>
+        <div class="subtitle">แตะการ์ดเพื่อสุ่มคำถามสนุก ๆ</div>
+        <div class="tagline">
+          <span class="icon-heart" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-6.716-4.243-9.172-7.314C1.02 12.605 1 10.13 2.343 8.586c1.343-1.543 3.657-1.757 5.172-.471L12 10l4.485-1.885c1.515-1.286 3.829-1.072 5.172.471C23 10.13 22.98 12.605 21.172 13.686 18.716 16.757 12 21 12 21z"></path></svg></span>
+          <span>ทุกการให้คือรอยยิ้ม เพราะพวกเราคือ Heartist ศิลปินผู้ให้</span>
+          <span class="icon-heart" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-6.716-4.243-9.172-7.314C1.02 12.605 1 10.13 2.343 8.586c1.343-1.543 3.657-1.757 5.172-.471L12 10l4.485-1.885c1.515-1.286 3.829-1.072 5.172.471C23 10.13 22.98 12.605 21.172 13.686 18.716 16.757 12 21 12 21z"></path></svg></span>
+        </div>
+      </div>
+
+      <div class="card-wrap">
+        <div id="card" class="card" role="button" aria-label="สุ่มคำถาม">
+          <div class="card-glow"></div>
+          <div class="content">
+            <div id="start-state">
+              <div style="margin-bottom:24px; display:flex; align-items:center; justify-content:center;">
+                <div style="width:96px; height:96px; border-radius:999px; background:linear-gradient(135deg, var(--red-500), var(--red-600)); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 20px rgba(220,38,38,.35)">
+                  <span class="icon-drop" aria-hidden="true" style="width:56px; height:56px; color:white">
+                    <svg viewBox="0 0 24 24"><path d="M12 2c3 4.5 8 8.24 8 12a8 8 0 1 1-16 0c0-3.76 5-7.5 8-12z"></path></svg>
+                  </span>
+                </div>
+              </div>
+              <div class="big-gradient-text">แตะเพื่อเริ่มเกม!</div>
+              <div class="hint">คลิกการ์ดเพื่อสุ่มคำถาม</div>
+            </div>
+            <div id="question-state" style="display:none">
+              <div style="margin-bottom:24px; display:flex; align-items:center; justify-content:center;">
+                <div style="width:80px; height:80px; border-radius:999px; background:linear-gradient(135deg, var(--red-500), var(--red-600)); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 20px rgba(220,38,38,.35)" class="pulse">
+                  <span class="icon-heart" aria-hidden="true" style="width:40px; height:40px; color:white">
+                    <svg viewBox="0 0 24 24"><path d="M12 21s-6.716-4.243-9.172-7.314C1.02 12.605 1 10.13 2.343 8.586c1.343-1.543 3.657-1.757 5.172-.471L12 10l4.485-1.885c1.515-1.286 3.829-1.072 5.172.471C23 10.13 22.98 12.605 21.172 13.686 18.716 16.757 12 21 12 21z"></path></svg>
+                  </span>
+                </div>
+              </div>
+              <div id="question-text" class="question"></div>
+              <div class="hint">แตะเพื่อสุ่มคำถามใหม่</div>
+            </div>
+          </div>
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const questions = [
+        "คนหนึ่งคนสามารถบริจาคเลือดได้บ่อยแค่ไหน?",
+        "การบริจาคเลือด 1 ครั้ง สามารถช่วยชีวิตคนได้กี่คน?",
+        "ก่อนบริจาคเลือดควรงดอาหารประเภทใด?",
+        "หลังบริจาคเลือดเสร็จ ควรทำอย่างไร?",
+        "คนที่มีน้ำหนักน้อยกว่า 45 กก. สามารถบริจาคเลือดได้ไหม?",
+        "เลือดของคนเรามีกี่หมู่?",
+        "การบริจาคเลือดทำให้อ้วนไหม?",
+        "ทำไมเราต้อง “พักผ่อนให้เพียงพอ” ก่อนบริจาคเลือด?",
+        "ถ้าเพิ่งสักมา สามารถบริจาคเลือดได้ไหม?",
+        "ของขวัญแห่งชีวิต” ในการบริจาคเลือด หมายถึงอะไร?",
+        "หลังจากบริจาคเลือดแล้ว ร่างกายจะใช้เวลาสร้างเลือดใหม่ประมาณกี่วัน?",
+        "ผู้ชายกับผู้หญิง ใครบริจาคเลือดได้บ่อยกว่ากัน?",
+        "“เลือดของเรา” สามารถเก็บไว้ได้นานเท่าไรหลังบริจาค?",
+        "ถ้าเราบริจาคเลือด 1 ครั้ง เราจะได้รับอะไรกลับมาบ้าง?",
+        "ถ้าเลือดเราสามารถพูดได้… มันอยากจะบอกอะไรกับคนที่ได้รับเลือดจากเรา?"
+      ];
+
+      const card = document.getElementById('card');
+      const startState = document.getElementById('start-state');
+      const questionState = document.getElementById('question-state');
+      const questionText = document.getElementById('question-text');
+
+      let isFlipping = false;
+
+      function handleCardClick() {
+        if (isFlipping) return;
+        isFlipping = true;
+        card.classList.add('is-flipping');
+        const randomIndex = Math.floor(Math.random() * questions.length);
+        setTimeout(() => {
+          questionText.textContent = questions[randomIndex];
+          startState.style.display = 'none';
+          questionState.style.display = '';
+          card.classList.remove('is-flipping');
+          isFlipping = false;
+        }, 600);
+      }
+      card.addEventListener('click', handleCardClick);
+
+      // Decorative background elements
+      const bgDrops = document.getElementById('bg-drops');
+      const bgHearts = document.getElementById('bg-hearts');
+      function createFloat(el, count, slow) {
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i < count; i++) {
+          const div = document.createElement('div');
+          div.className = slow ? 'float animate-float-slow' : 'float animate-float';
+          div.style.left = (Math.random() * 100) + '%';
+          div.style.top = '-20px';
+          div.style.animationDelay = (Math.random() * (slow ? 8 : 5)) + 's';
+          div.style.animationDuration = ((slow ? 20 : 15) + Math.random() * (slow ? 15 : 10)) + 's';
+          div.style.width = slow ? '24px' : '32px';
+          div.style.height = div.style.width;
+          div.style.color = slow ? '#fca5a5' : '#fecaca';
+          div.innerHTML = slow
+            ? '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M12 21s-6.716-4.243-9.172-7.314C1.02 12.605 1 10.13 2.343 8.586c1.343-1.543 3.657-1.757 5.172-.471L12 10l4.485-1.885c1.515-1.286 3.829-1.072 5.172.471C23 10.13 22.98 12.605 21.172 13.686 18.716 16.757 12 21 12 21z"></path></svg>'
+            : '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><path d="M12 2c3 4.5 8 8.24 8 12a8 8 0 1 1-16 0c0-3.76 5-7.5 8-12z"></path></svg>';
+          frag.appendChild(div);
+        }
+        el.appendChild(frag);
+      }
+      createFloat(bgDrops, 8, false);
+      createFloat(bgHearts, 6, true);
+    </script>
+  </body>
+</html>
+
